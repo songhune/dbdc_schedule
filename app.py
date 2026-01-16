@@ -27,8 +27,8 @@ TRANSLATIONS = {
         "login_button": "로그인",
         "login_error": "비밀번호가 올바르지 않습니다.",
         "login_success": "로그인 완료",
-        "create_title": "새 폴 생성",
-        "poll_id": "폴 ID (짧은 코드)",
+        "create_title": "새 일정 생성",
+        "poll_id": "일정 ID (짧은 코드)",
         "poll_id_help": "예: team-lunch-jan",
         "poll_title": "제목",
         "poll_desc": "설명",
@@ -38,27 +38,27 @@ TRANSLATIONS = {
         "start_time": "시작 시간",
         "end_time": "종료 시간",
         "slot_minutes": "슬롯 길이(분)",
-        "create_submit": "폴 생성/덮어쓰기",
-        "poll_id_required": "폴 ID는 필수입니다.",
+        "create_submit": "일정 생성/덮어쓰기",
+        "poll_id_required": "일정 ID는 필수입니다.",
         "date_required": "시작/종료 날짜를 모두 선택해주세요.",
         "time_invalid": "시작 시간은 종료 시간보다 빨라야 합니다.",
         "no_slots": "생성된 슬롯이 없습니다. 시간 범위와 길이를 확인하세요.",
-        "poll_ready": "폴 `{poll_id}`이(가) 준비되었습니다. 오른쪽에서 공유/투표를 진행하세요.",
+        "poll_ready": "일정 `{poll_id}`이(가) 준비되었습니다. 오른쪽에서 공유/투표를 진행하세요.",
         "participation": "참여 및 현황",
-        "no_polls": "아직 생성된 폴이 없습니다.",
-        "open_polls": "열린 폴",
+        "no_polls": "아직 생성된 일정이 없습니다.",
+        "open_polls": "열린 일정",
         "vote_section": "투표하기",
-        "voter_name": "이름/닉네임",
+        "voter_name": "이름",
         "comment": "메모 (선택)",
         "vote_submit": "저장",
-        "name_required": "이름/닉네임을 입력해주세요.",
+        "name_required": "이름을 입력해주세요.",
         "vote_saved": "응답이 저장되었습니다.",
         "responses": "응답",
         "popular": "가장 인기 있는 슬롯",
         "popular_col_slot": "슬롯",
         "popular_col_yes": "찬성",
-        "no_responses": "아직 응답이 없습니다. 링크를 공유하고 투표를 받아보세요.",
-        "export_title": "Synology NAS 내보내기 (공유폴더가 OS에서 마운트되어 있어야 합니다)",
+        "no_responses": "아직 응답이 없습니다. 투표를 입력하거나 직접 확정하세요.",
+        "export_title": "내보내기",
         "export_path": "내보내기 경로",
         "export_button": "CSV로 내보내기",
         "export_need_path": "경로를 입력하세요.",
@@ -71,15 +71,16 @@ TRANSLATIONS = {
         "mode": "모드",
         "mode_admin": "관리자",
         "mode_guest": "참여자",
-        "poll_password": "폴 비밀번호 (선택)",
-        "poll_password_help": "투표시 입력해야 하는 비밀번호. 비우면 비번 없이 투표 가능.",
-        "poll_password_prompt": "폴 비밀번호를 입력하세요",
-        "access_needed": "투표하려면 폴 비밀번호가 필요합니다.",
-        "delete_poll": "선택 폴 삭제",
-        "delete_confirm": "삭제 확인용으로 폴 ID를 입력하세요",
-        "delete_done": "폴이 삭제되었습니다.",
-        "delete_fail": "폴 삭제에 실패했습니다: {error}",
-        "edit_load": "선택 폴 불러와서 수정",
+        "mode_guide": "사용법",
+        "poll_password": "일정 비밀번호 (선택)",
+        "poll_password_help": "투표 관리 비밀번호. 비우면 비번 없이 삭제 가능.",
+        "poll_password_prompt": "일정 비밀번호를 입력하세요",
+        "access_needed": "투표하려면 일정 비밀번호가 필요합니다.",
+        "delete_poll": "선택 일정 삭제",
+        "delete_confirm": "삭제 확인용으로 일정 ID를 입력하세요",
+        "delete_done": "일정이 삭제되었습니다.",
+        "delete_fail": "일정 삭제에 실패했습니다: {error}",
+        "edit_load": "선택 일정 불러와서 수정",
         "choose_slots": "가능한 슬롯을 버튼으로 선택하세요",
         "selected_count": "선택된 슬롯: {count}개",
         "load_my_vote": "내 선택 불러오기",
@@ -87,10 +88,10 @@ TRANSLATIONS = {
         "voter_pw_help": "내 응답을 수정/불러올 때 사용할 비밀번호",
         "voter_pw_need": "참여자 비밀번호를 입력해주세요.",
         "voter_pw_mismatch": "참여자 비밀번호가 일치하지 않습니다.",
-        "add_calendar": "캘린더에 추가",
-        "need_selection": "선택한 슬롯이 있어야 캘린더로 내보낼 수 있습니다.",
-        "ical_download": "📅 iCal 다운로드",
-        "google_add": "🗓 Google Calendar에 추가",
+        "add_calendar": "",
+        "need_selection": "",
+        "ical_download": "",
+        "google_add": "",
         "timeline_hint": "슬롯 위에 마우스를 올리면 선택자 목록이 보입니다.",
         "selected_slots": "선택한 슬롯 요약",
         "popular_names": "슬롯별 선택자",
@@ -102,6 +103,18 @@ TRANSLATIONS = {
         "syno_need_slot": "업로드할 슬롯을 결정할 수 없습니다. 투표를 먼저 받으세요.",
         "syno_success": "Synology 캘린더에 업로드되었습니다.",
         "syno_error": "Synology 업로드 실패: {error}",
+        "slot_click_hint": "가능한 슬롯을 클릭해 선택/해제하세요 (미선택 시 전부 사용)",
+        "participant_filter": "참여자 필터",
+        "finalize_section": "일정 확정",
+        "finalize_slot": "확정할 슬롯",
+        "finalize_button": "확정하기",
+        "finalized_label": "확정된 슬롯: {label}",
+        "email_draft": "메일 초안",
+        "need_final_for_export": "관리자가 확정한 시간대가 있어야 내보낼 수 있습니다.",
+        "syno_missing_fields": "URL/계정/비밀번호/캘린더 ID를 입력하세요.",
+        "simple_view": "간추려 보기: 해제 시 타임라인 확인 가능합니다.",
+        "usage_title": "사용법",
+        "usage_steps": "",
     },
     "en": {
         "app_title": "DB/DC Seminar Scheduler",
@@ -140,7 +153,7 @@ TRANSLATIONS = {
         "popular": "Top slots",
         "popular_col_slot": "Slot",
         "popular_col_yes": "Yes",
-        "no_responses": "No responses yet. Share the link and collect votes.",
+        "no_responses": "No responses yet. Add votes or finalize directly.",
         "export_title": "Synology NAS export (shared folder must be mounted by OS)",
         "export_path": "Export path",
         "export_button": "Export CSV",
@@ -154,6 +167,7 @@ TRANSLATIONS = {
         "mode": "Mode",
         "mode_admin": "Admin",
         "mode_guest": "Guest",
+        "mode_guide": "Guide",
         "poll_password": "Poll password (optional)",
         "poll_password_help": "Required for voting. Leave blank for open voting.",
         "poll_password_prompt": "Enter poll password",
@@ -170,10 +184,10 @@ TRANSLATIONS = {
         "voter_pw_help": "Required to edit/load your responses",
         "voter_pw_need": "Enter your participant password.",
         "voter_pw_mismatch": "Participant password does not match.",
-        "add_calendar": "Add to calendar",
-        "need_selection": "Select at least one slot to export to calendar.",
-        "ical_download": "📅 Download iCal",
-        "google_add": "🗓 Add to Google Calendar",
+        "add_calendar": "",
+        "need_selection": "",
+        "ical_download": "",
+        "google_add": "",
         "timeline_hint": "Hover a slot to see who picked it.",
         "selected_slots": "Chosen slots by participant",
         "popular_names": "Slots with voters",
@@ -185,6 +199,18 @@ TRANSLATIONS = {
         "syno_need_slot": "Cannot determine a slot to upload. Collect votes first.",
         "syno_success": "Uploaded to Synology Calendar.",
         "syno_error": "Synology upload failed: {error}",
+        "slot_click_hint": "Click slots to include/exclude (all used if none picked).",
+        "participant_filter": "Filter by participant",
+        "finalize_section": "Finalize schedule",
+        "finalize_slot": "Slot to finalize",
+        "finalize_button": "Finalize",
+        "finalized_label": "Finalized slot: {label}",
+        "email_draft": "Email draft",
+        "need_final_for_export": "A finalized slot is required before exporting.",
+        "syno_missing_fields": "Enter URL/account/password/calendar ID.",
+        "simple_view": "Guest simple view",
+        "usage_title": "How to use",
+        "usage_steps": "",
     },
 }
 
@@ -205,6 +231,16 @@ def get_admin_password() -> str:
     except Exception:
         secret = None
     return secret or os.getenv("SCHEDULER_APP_PASSWORD", DEFAULT_ADMIN_PASS)
+
+
+def load_usage_md(lang: str) -> str:
+    fname = f"docs/USAGE_{lang}.md"
+    try:
+        with open(fname, "r", encoding="utf-8") as f:
+            return f.read()
+    except Exception:
+        fallback = TRANSLATIONS.get(lang, {}).get("usage_steps") or ""
+        return fallback or "No guide available yet."
 
 
 @st.cache_resource
@@ -244,7 +280,7 @@ def render_timeline(options_df: pd.DataFrame, summary_map: dict, voters_map: dic
             font-size:11px;
             white-space:pre-line;
             word-break:break-word;
-            max-width:260px;
+            max-width:90vw;
             line-height:1.35;
             box-shadow:0 8px 18px rgba(0,0,0,0.4);
             z-index:10;
@@ -322,7 +358,14 @@ if "logged_in" not in st.session_state:
 if "lang" not in st.session_state:
     st.session_state.lang = "ko"
 if "mode" not in st.session_state:
-    st.session_state.mode = "admin"
+    st.session_state.mode = "guide"
+if "simple_view" not in st.session_state:
+    st.session_state.simple_view = True
+if st.session_state.get("simple_view_force_off"):
+    st.session_state.simple_view = False
+    st.session_state.pop("simple_view_force_off", None)
+if "flash_save" not in st.session_state:
+    st.session_state.flash_save = False
 
 lang_label_map = {"ko": "한국어", "en": "English"}
 st.sidebar.selectbox(
@@ -331,14 +374,22 @@ st.sidebar.selectbox(
     format_func=lambda x: lang_label_map.get(x, x),
     key="lang",
 )
-mode_label_map = {"admin": t("mode_admin"), "guest": t("mode_guest")}
-st.sidebar.radio(t("mode"), options=["admin", "guest"], format_func=lambda x: mode_label_map[x], key="mode")
+mode_label_map = {"guide": t("mode_guide"), "admin": t("mode_admin"), "guest": t("mode_guest")}
+st.sidebar.radio(t("mode"), options=["guide", "guest", "admin"], format_func=lambda x: mode_label_map[x], key="mode")
 
 st.title(t("app_title"))
 
 admin_password = get_admin_password()
 
 st.sidebar.info(t("sidebar_info"))
+
+if st.session_state.mode == "guide":
+    st.subheader(t("usage_title"))
+    st.markdown(load_usage_md(st.session_state.lang))
+    if st.session_state.flash_save:
+        st.success(t("vote_saved"))
+        st.session_state.flash_save = False
+    st.stop()
 
 if st.session_state.mode == "admin":
     if not st.session_state.logged_in:
@@ -356,12 +407,11 @@ if st.session_state.mode == "admin":
 else:
     st.session_state.logged_in = False  # ensure guest mode doesn't carry admin flag
 
+if st.session_state.flash_save:
+    st.success(t("vote_saved"))
+    st.session_state.flash_save = False
+
 conn = get_conn_cached()
-for col in ("final_start_ts", "final_end_ts"):
-    try:
-        conn.execute(f"ALTER TABLE polls ADD COLUMN {col} TEXT")
-    except Exception:
-        pass
 open_polls = load_polls(conn)
 
 is_admin = st.session_state.mode == "admin" and st.session_state.logged_in
@@ -402,6 +452,8 @@ with col_left if col_left else st.container():
                 key="form_date_range",
                 help=t("date_help"),
             )
+            if isinstance(date_range, date):
+                date_range = (date_range, date_range)
             start_time = st.time_input(t("start_time"), key="form_start_time")
             end_time = st.time_input(t("end_time"), key="form_end_time")
             slot_minutes = st.number_input(t("slot_minutes"), min_value=15, max_value=240, step=15, key="form_slot_minutes")
@@ -417,12 +469,7 @@ with col_left if col_left else st.container():
                 st.error(t("time_invalid"))
             else:
                 start_d, end_d = date_range
-                slots = [
-                    (datetime.fromisoformat(s), datetime.fromisoformat(e))
-                    for s, e in st.session_state.get("custom_slots", [])
-                ]
-                if not slots:
-                    slots = generate_slots(start_d, end_d, start_time, end_time, int(slot_minutes))
+                slots = generate_slots(start_d, end_d, start_time, end_time, int(slot_minutes))
                 if not slots:
                     st.error(t("no_slots"))
                 else:
@@ -452,44 +499,10 @@ with col_left if col_left else st.container():
                         conn.execute(
                             "INSERT INTO options(poll_id, start_ts, end_ts) VALUES (?, ?, ?)",
                             (poll_id, start_ts.isoformat(), end_ts.isoformat()),
-                    )
-                conn.commit()
-                st.success(t("poll_ready", poll_id=poll_id))
-                open_polls = load_polls(conn)
-
-        # interactive slot selection preview
-        if len(date_range) == 2:
-            start_d, end_d = date_range
-            preview_slots = generate_slots(start_d, end_d, start_time, end_time, int(slot_minutes))
-            sig = f"{start_d.isoformat()}|{end_d.isoformat()}|{start_time.isoformat()}|{end_time.isoformat()}|{slot_minutes}"
-            if st.session_state.get("slot_sig") != sig:
-                st.session_state["slot_sig"] = sig
-                st.session_state["custom_slots"] = [(s.isoformat(), e.isoformat()) for s, e in preview_slots]
-            st.markdown("_가능한 슬롯을 클릭해 선택/해제하세요 (미선택 시 전부 사용)_")
-            grouped = {}
-            for s, e in preview_slots:
-                key = s.strftime("%Y-%m-%d (%a)")
-                grouped.setdefault(key, []).append((s, e))
-            for day, rows in grouped.items():
-                st.markdown(f"**{day}**")
-                cols = st.columns(min(4, len(rows)))
-                for idx, (s, e) in enumerate(rows):
-                    col = cols[idx % len(cols)]
-                    with col:
-                        key_val = (s.isoformat(), e.isoformat())
-                        selected = key_val in st.session_state.get("custom_slots", [])
-                        label = f"{s.strftime('%H:%M')} - {e.strftime('%H:%M')}"
-                        btn_label = f"{'✅' if selected else '⬜️'} {label}"
-
-                        def toggle_admin_slot(val=key_val):
-                            cur = set(st.session_state.get("custom_slots", []))
-                            if val in cur:
-                                cur.remove(val)
-                            else:
-                                cur.add(val)
-                            st.session_state["custom_slots"] = list(cur)
-
-                        st.button(btn_label, key=f"admin-slot-{key_val}", on_click=toggle_admin_slot, use_container_width=True)
+                        )
+                    conn.commit()
+                    st.success(t("poll_ready", poll_id=poll_id))
+                    open_polls = load_polls(conn)
 
 with col_right:
     st.subheader(t("participation") if not is_admin else t("open_polls"))
@@ -503,14 +516,15 @@ with col_right:
         open_polls["poll_id"],
         format_func=lambda pid: f"{pid} · {poll_lookup.get(pid, '')}",
     )
+    simple_view = st.session_state.get("simple_view", True)
+    if not is_admin:
+        st.checkbox(t("simple_view"), value=simple_view, key="simple_view")
+        simple_view = st.session_state.get("simple_view", True)
 
     if selected_poll:
         poll_meta = pd.read_sql("SELECT * FROM polls WHERE poll_id = ?", conn, params=(selected_poll,)).iloc[0]
         st.caption(poll_meta["description"])
         poll_pw_required = poll_meta.get("poll_password")
-        poll_pw_key = f"poll_pw_{selected_poll}"
-        if poll_pw_key not in st.session_state:
-            st.session_state[poll_pw_key] = ""
 
         options_df = pd.read_sql(
             "SELECT option_id, start_ts, end_ts FROM options WHERE poll_id = ? ORDER BY start_ts",
@@ -529,32 +543,26 @@ with col_right:
             params=(selected_poll,),
         )
 
-        votes_df_full = votes_df.copy()
-        summary_map_full = votes_df_full.groupby("option_id")["available"].sum().to_dict() if not votes_df_full.empty else {}
-        voters_map_full = (
-            votes_df_full[votes_df_full["available"] == 1].groupby("option_id")["voter_name"].apply(list).to_dict()
-            if not votes_df_full.empty
+        summary_map = votes_df.groupby("option_id")["available"].sum().to_dict() if not votes_df.empty else {}
+        voters_map = (
+            votes_df[votes_df["available"] == 1].groupby("option_id")["voter_name"].apply(list).to_dict()
+            if not votes_df.empty
             else {}
         )
-
-        summary_map = summary_map_full
-        voters_map = voters_map_full
-        st.caption(t("timeline_hint"))
-        voter_filter = []
-        if not votes_df_full.empty:
-            voter_filter = st.multiselect("참여자 필터", sorted(votes_df_full["voter_name"].unique()))
-            if voter_filter:
-                filtered_votes = votes_df_full[votes_df_full["voter_name"].isin(voter_filter)]
-                summary_map = filtered_votes.groupby("option_id")["available"].sum().to_dict()
-                voters_map = (
-                    filtered_votes[filtered_votes["available"] == 1]
-                    .groupby("option_id")["voter_name"]
-                    .apply(list)
-                    .to_dict()
-                    if not filtered_votes.empty
-                    else {}
-                )
-        render_timeline(options_df, summary_map, voters_map)
+        if not (not is_admin and simple_view):
+            st.caption(t("timeline_hint"))
+            render_timeline(options_df, summary_map, voters_map)
+            if not votes_df.empty:
+                voter_filter = st.multiselect(t("participant_filter"), sorted(votes_df["voter_name"].unique()))
+                if voter_filter:
+                    filtered = votes_df[votes_df["voter_name"].isin(voter_filter)]
+                    summary_map = filtered.groupby("option_id")["available"].sum().to_dict()
+                    voters_map = (
+                        filtered[filtered["available"] == 1].groupby("option_id")["voter_name"].apply(list).to_dict()
+                        if not filtered.empty
+                        else {}
+                    )
+                    render_timeline(options_df, summary_map, voters_map)
 
         if is_admin:
             if st.button(t("edit_load"), type="secondary"):
@@ -575,35 +583,32 @@ with col_right:
 
             st.markdown("###")
             with st.expander(t("delete_poll")):
-                confirm = st.text_input(t("delete_confirm"), key=f"confirm_{selected_poll}")
+                delete_choice = st.radio(
+                    t("delete_confirm"),
+                    options=open_polls["poll_id"].tolist(),
+                    index=list(open_polls["poll_id"]).index(selected_poll),
+                    key=f"delete_choice_{selected_poll}",
+                )
+                pw_check = None
+                if poll_pw_required:
+                    pw_check = st.text_input(t("poll_password_prompt"), type="password", key=f"delpw_{selected_poll}")
                 if st.button(t("delete_poll"), type="primary"):
-                    if confirm != selected_poll:
-                        st.error(t("delete_confirm"))
+                    if poll_pw_required and pw_check != poll_pw_required:
+                        st.error(t("access_needed"))
                     else:
                         try:
-                            conn.execute("DELETE FROM votes WHERE poll_id = ?", (selected_poll,))
-                            conn.execute("DELETE FROM options WHERE poll_id = ?", (selected_poll,))
-                            conn.execute("DELETE FROM polls WHERE poll_id = ?", (selected_poll,))
+                            conn.execute("DELETE FROM votes WHERE poll_id = ?", (delete_choice,))
+                            conn.execute("DELETE FROM options WHERE poll_id = ?", (delete_choice,))
+                            conn.execute("DELETE FROM polls WHERE poll_id = ?", (delete_choice,))
                             conn.commit()
                             st.success(t("delete_done"))
                             st.rerun()
                         except Exception as exc:
                             st.error(t("delete_fail", error=exc))
 
-        access_granted = True if is_admin else not poll_pw_required
         first_chosen = None
 
         if not is_admin:
-            if poll_pw_required and not access_granted:
-                pw_input = st.text_input(t("poll_password_prompt"), type="password", key=poll_pw_key)
-                if pw_input == poll_pw_required:
-                    access_granted = True
-                else:
-                    st.info(t("access_needed"))
-
-            if not access_granted:
-                st.stop()
-
             st.markdown(f"**{t('vote_section')}**")
             sel_key = f"selections_{selected_poll}"
             st.session_state.setdefault(sel_key, [])
@@ -640,7 +645,11 @@ with col_right:
                     if not first_comment.empty:
                         st.session_state[f"comment_{selected_poll}"] = first_comment.iloc[0]
 
-            st.button(t("load_my_vote"), on_click=load_my_vote)
+            ctrl_col1, ctrl_col2 = st.columns(2)
+            with ctrl_col1:
+                st.button(t("load_my_vote"), on_click=load_my_vote, use_container_width=True)
+            with ctrl_col2:
+                save_clicked = st.button(t("vote_submit"), type="primary", use_container_width=True)
 
             grouped_slots = {}
             for _, opt in options_df.iterrows():
@@ -665,7 +674,9 @@ with col_right:
                     col = cols[idx % len(cols)]
                     with col:
                         selected = opt["option_id"] in st.session_state[sel_key]
-                        label = slot_label(opt["start_ts"], opt["end_ts"])
+                        sdt = datetime.fromisoformat(opt["start_ts"])
+                        edt = datetime.fromisoformat(opt["end_ts"])
+                        label = f"{sdt.strftime('%H:%M')} - {edt.strftime('%H:%M')}"
                         btn_label = f"{'✅' if selected else '⬜️'} {label}"
 
                         def toggle_option(oid=opt["option_id"]):
@@ -686,7 +697,7 @@ with col_right:
                     datetime.fromisoformat(first_opt["end_ts"]),
                 )
 
-            if st.button(t("vote_submit"), type="primary"):
+            if save_clicked:
                 if not voter_name:
                     st.error(t("name_required"))
                 elif not voter_pw:
@@ -704,52 +715,70 @@ with col_right:
                         )
                     conn.commit()
                     st.success(t("vote_saved"))
+                    st.session_state["simple_view_force_off"] = True
+                    st.session_state["flash_save"] = True
                     st.rerun()
 
         summary = pd.DataFrame()
 
         best_slot = None
         final_slot = None
-        if not votes_df_full.empty:
+        if not votes_df.empty and not simple_view:
             options_df["label"] = options_df.apply(lambda row: slot_label(row["start_ts"], row["end_ts"]), axis=1)
-            chosen = votes_df_full[votes_df_full["available"] == 1].merge(
-                options_df[["option_id", "label"]], on="option_id", how="left"
+            chosen = votes_df[votes_df["available"] == 1].merge(
+                options_df[["option_id", "label", "start_ts"]], on="option_id", how="left"
             )
-            per_voter = (
-                chosen.groupby("voter_name")["label"].apply(lambda x: ", ".join(sorted(set(x)))).reset_index()
-            )
-            st.markdown(f"**{t('selected_slots')}**")
-            st.dataframe(per_voter.rename(columns={"voter_name": t("voter_name"), "label": t("popular_col_slot")}))
 
-            per_slot = (
-                chosen.groupby(["option_id", "label"])["voter_name"]
-                .apply(lambda x: ", ".join(sorted(set(x))))
-                .reset_index()
-            )
-            per_slot = per_slot.sort_values(by="label")
-            st.markdown(f"**{t('popular_names')}**")
-            st.dataframe(per_slot.rename(columns={"label": t("popular_col_slot"), "voter_name": t("voter_name")}))
-            if summary_map_full:
-                best_id = max(summary_map_full.items(), key=lambda kv: kv[1])[0]
-                best_slot_row = options_df[options_df["option_id"] == best_id].iloc[0]
-                best_slot = (
-                    datetime.fromisoformat(best_slot_row["start_ts"]),
-                    datetime.fromisoformat(best_slot_row["end_ts"]),
+            def summarize_by_day(group):
+                day_map = {}
+                for _, r in group.iterrows():
+                    if "start_ts" not in r or not r["start_ts"]:
+                        continue
+                    day = datetime.fromisoformat(str(r["start_ts"])).strftime("%m/%d")
+                    day_map.setdefault(day, []).append(r["label"].split(" ", 1)[-1])
+                parts = []
+                for d, labels in sorted(day_map.items()):
+                    parts.append(f"{d}: {', '.join(sorted(set(labels)))}")
+                return " | ".join(parts)
+
+            if chosen.empty:
+                st.info(t("no_responses"))
+            else:
+                per_voter = chosen.groupby("voter_name").apply(summarize_by_day).reset_index()
+                per_voter.columns = ["voter_name", "label"]
+                st.markdown(f"**{t('selected_slots')}**")
+                st.dataframe(per_voter.rename(columns={"voter_name": t("voter_name"), "label": t("popular_col_slot")}))
+
+                per_slot = (
+                    chosen.groupby(["label"])["voter_name"].apply(lambda x: ", ".join(sorted(set(x)))).reset_index()
                 )
-            if poll_meta.get("final_start_ts") and poll_meta.get("final_end_ts"):
-                final_slot = (
-                    datetime.fromisoformat(poll_meta["final_start_ts"]),
-                    datetime.fromisoformat(poll_meta["final_end_ts"]),
-                )
+                per_slot = per_slot.sort_values(by="label")
+                st.markdown(f"**{t('popular_names')}**")
+                st.dataframe(per_slot.rename(columns={"label": t("popular_col_slot"), "voter_name": t("voter_name")}))
+                if summary_map:
+                    best_id = max(summary_map.items(), key=lambda kv: kv[1])[0]
+                    best_slot_row = options_df[options_df["option_id"] == best_id].iloc[0]
+                    best_slot = (
+                        datetime.fromisoformat(best_slot_row["start_ts"]),
+                        datetime.fromisoformat(best_slot_row["end_ts"]),
+                    )
+                if poll_meta.get("final_start_ts") and poll_meta.get("final_end_ts"):
+                    final_slot = (
+                        datetime.fromisoformat(poll_meta["final_start_ts"]),
+                        datetime.fromisoformat(poll_meta["final_end_ts"]),
+                    )
         else:
             st.info(t("no_responses"))
 
         st.markdown("---")
         if is_admin:
-            total_voters = votes_df_full["voter_name"].nunique() if not votes_df_full.empty else 0
-            if not votes_df_full.empty:
-                st.markdown("**Finalize schedule**")
-                option_counts = votes_df_full[votes_df_full["available"] == 1].groupby("option_id")["voter_name"].nunique()
+            total_voters = votes_df["voter_name"].nunique() if not votes_df.empty else 0
+            if not votes_df.empty:
+                st.markdown(f"**{t('finalize_section')}**")
+                pw_check_final = None
+                if poll_pw_required:
+                    pw_check_final = st.text_input(t("poll_password_prompt"), type="password", key=f"finalpw_{selected_poll}")
+                option_counts = votes_df[votes_df["available"] == 1].groupby("option_id")["voter_name"].nunique()
                 option_counts = option_counts.reindex(options_df["option_id"]).fillna(0).astype(int)
                 finalize_options = []
                 for _, row in options_df.iterrows():
@@ -766,21 +795,24 @@ with col_right:
                             default_index = idx
                             break
                 chosen_oid = st.selectbox(
-                    "확정할 슬롯",
+                    t("finalize_slot"),
                     finalize_options,
                     format_func=lambda x: x[1],
                     index=default_index,
                     key=f"finalize_{selected_poll}",
                 )
-                if st.button("확정하기"):
-                    oid = chosen_oid[0] if isinstance(chosen_oid, tuple) else chosen_oid
-                    row = options_df[options_df["option_id"] == oid].iloc[0]
-                    conn.execute(
-                        "UPDATE polls SET final_start_ts = ?, final_end_ts = ? WHERE poll_id = ?",
-                        (row["start_ts"], row["end_ts"], selected_poll),
+                if st.button(t("finalize_button")):
+                    if poll_pw_required and pw_check_final != poll_pw_required:
+                        st.error(t("access_needed"))
+                    else:
+                        oid = chosen_oid[0] if isinstance(chosen_oid, tuple) else chosen_oid
+                        row = options_df[options_df["option_id"] == oid].iloc[0]
+                        conn.execute(
+                            "UPDATE polls SET final_start_ts = ?, final_end_ts = ? WHERE poll_id = ?",
+                            (row["start_ts"], row["end_ts"], selected_poll),
                     )
                     conn.commit()
-                    st.success("일정이 확정되었습니다.")
+                    st.success(t("finalized_label", label=slot_label(row["start_ts"], row["end_ts"])))
                     st.session_state["finalized_slot"] = (row["start_ts"], row["end_ts"])
                     st.rerun()
                 if final_slot or st.session_state.get("finalized_slot"):
@@ -789,60 +821,66 @@ with col_right:
                         final_slot = (datetime.fromisoformat(fs[0]), datetime.fromisoformat(fs[1]))
                     if final_slot:
                         label = f"{final_slot[0].strftime('%Y-%m-%d %H:%M')} - {final_slot[1].strftime('%H:%M')}"
-                        st.info(f"확정된 슬롯: {label}")
+                        st.info(t("finalized_label", label=label))
                         email_subject = f"[Schedule Confirmed] {poll_meta['title']}"
                         email_body = "\n".join(
                             [
                                 f"{poll_meta['title']} 일정이 확정되었습니다.",
                                 f"시간: {label}",
                                 "장소/링크: ",
-                                f"참여자: {', '.join(sorted(votes_df_full['voter_name'].unique()))}",
+                                f"참여자: {', '.join(sorted(votes_df['voter_name'].unique()))}",
                                 f"비고: {poll_meta['description']}",
                             ]
                         )
-                        st.text_area("메일 초안", value=f"Subject: {email_subject}\n\n{email_body}", height=140)
-            st.markdown("**Synology Calendar**")
-            syno_url = st.text_input(t("syno_url"), key="syno_url", placeholder="https://your-nas:5001")
-            syno_user = st.text_input(t("syno_user"), key="syno_user")
-            syno_pass = st.text_input(t("syno_pass"), key="syno_pass", type="password")
-            syno_cal = st.text_input(t("syno_cal"), key="syno_cal", help="예: personal calendar UUID or name")
-            if st.button(t("syno_upload")):
-                if not best_slot:
-                    st.error(t("syno_need_slot"))
-                elif not all([syno_url, syno_user, syno_pass, syno_cal]):
-                    st.error("URL/계정/비밀번호/캘린더 ID를 입력하세요.")
-                else:
-                    try:
-                        slot_for_sync = final_slot or best_slot
-                        push_synology_event(
-                            syno_url.rstrip("/"),
-                            syno_user,
-                            syno_pass,
-                            syno_cal,
-                            poll_meta["title"],
-                            poll_meta["description"],
-                            slot_for_sync[0],
-                            slot_for_sync[1],
-                        )
-                        st.success(t("syno_success"))
-                    except Exception as exc:
-                        st.error(t("syno_error", error=exc))
+                        st.text_area(t("email_draft"), value=f"Subject: {email_subject}\n\n{email_body}", height=140)
+            with st.expander(t("export_title")):
+                default_path = st.session_state.get("nas_path", os.getenv("NAS_EXPORT_PATH", ""))
+                nas_path = st.text_input(t("export_path"), value=default_path, placeholder="/Volumes/nas/shared")
+                st.session_state["nas_path"] = nas_path
+                if st.button(t("export_button")):
+                    if not nas_path:
+                        st.error(t("export_need_path"))
+                    else:
+                        export_dir = Path(nas_path)
+                        try:
+                            export_dir.mkdir(parents=True, exist_ok=True)
+                            export_file = export_dir / f"{selected_poll}_results.csv"
+                            if votes_df.empty:
+                                pd.DataFrame().to_csv(export_file, index=False)
+                            else:
+                                # 원본 데이터와 요약을 함께 저장
+                                votes_df.to_csv(export_file, index=False)
+                                summary_file = export_dir / f"{selected_poll}_summary.csv"
+                                summary.to_csv(summary_file, index=False)
+                            st.success(t("export_success", path=export_dir))
+                        except Exception as exc:
+                            st.error(t("export_fail", error=exc))
+
+            with st.expander("Synology Calendar"):
+                syno_url = st.text_input(t("syno_url"), key="syno_url", placeholder="https://your-nas:5001")
+                syno_user = st.text_input(t("syno_user"), key="syno_user")
+                syno_pass = st.text_input(t("syno_pass"), key="syno_pass", type="password")
+                syno_cal = st.text_input(t("syno_cal"), key="syno_cal", help="예: personal calendar UUID or name")
+                if st.button(t("syno_upload")):
+                    if not best_slot:
+                        st.error(t("syno_need_slot"))
+                    elif not all([syno_url, syno_user, syno_pass, syno_cal]):
+                        st.error(t("syno_missing_fields"))
+                    else:
+                        try:
+                            slot_for_sync = final_slot or best_slot
+                            push_synology_event(
+                                syno_url.rstrip("/"),
+                                syno_user,
+                                syno_pass,
+                                syno_cal,
+                                poll_meta["title"],
+                                poll_meta["description"],
+                                slot_for_sync[0],
+                                slot_for_sync[1],
+                            )
+                            st.success(t("syno_success"))
+                        except Exception as exc:
+                            st.error(t("syno_error", error=exc))
         else:
-            st.markdown(f"**{t('add_calendar')}**")
-            active_slot = final_slot
-            if not active_slot:
-                st.info("관리자가 확정한 시간대가 있어야 내보낼 수 있습니다.")
-            else:
-                start_dt, end_dt = active_slot
-                ics = build_ics(start_dt, end_dt, poll_meta["title"], poll_meta["description"])
-                st.download_button(t("ical_download"), data=ics, file_name=f"{selected_poll}.ics", mime="text/calendar")
-                fmt = "%Y%m%dT%H%M%S"
-                gstart = start_dt.strftime(fmt)
-                gend = end_dt.strftime(fmt)
-                g_url = (
-                    "https://calendar.google.com/calendar/render?"
-                    f"action=TEMPLATE&text={poll_meta['title']}"
-                    f"&details={poll_meta['description']}"
-                    f"&dates={gstart}/{gend}"
-                )
-                st.link_button(t("google_add"), g_url, type="primary")
+            pass  # guest calendar export removed
