@@ -1,6 +1,9 @@
 import os
 import html
 import re
+import base64
+import hashlib
+import hmac
 from datetime import date, datetime, time, timedelta
 from pathlib import Path
 
@@ -8,7 +11,6 @@ import pandas as pd
 import streamlit as st
 
 from scheduler_core import (
-    build_ics,
     generate_slots,
     get_conn,
     load_polls,
@@ -111,12 +113,17 @@ TRANSLATIONS = {
         "syno_error": "Synology 업로드 실패: {error}",
         "slot_click_hint": "가능한 슬롯을 클릭해 선택/해제하세요 (미선택 시 전부 사용)",
         "participant_filter": "참여자 필터",
+        "admin_edit_title": "참여자 일정 편집",
+        "admin_edit_pick": "편집할 참여자",
+        "admin_edit_hint": "선택된 참여자의 가능한 슬롯을 수정합니다.",
+        "admin_edit_save": "선택 저장",
+        "admin_edit_done": "참여자 일정이 업데이트되었습니다.",
         "finalize_section": "일정 확정",
         "finalize_slot": "확정할 슬롯",
         "finalize_button": "확정하기",
         "finalized_label": "확정된 슬롯: {label}",
         "email_draft": "메일 초안",
-        "need_final_for_export": "관리자가 확정한 시간대가 있어야 내보낼 수 있습니다.",
+        "need_final_for_export": "관리자가 일정 확정을 완료해야 내보낼 수 있습니다.",
         "syno_missing_fields": "URL/계정/비밀번호/캘린더 ID를 입력하세요.",
         "simple_view": "간추려 보기: 해제 시 타임라인 확인 가능합니다.",
         "usage_title": "사용법",
@@ -212,12 +219,17 @@ TRANSLATIONS = {
         "syno_error": "Synology upload failed: {error}",
         "slot_click_hint": "Click slots to include/exclude (all used if none picked).",
         "participant_filter": "Filter by participant",
+        "admin_edit_title": "Edit participant schedule",
+        "admin_edit_pick": "Participant to edit",
+        "admin_edit_hint": "Update available slots for the selected participant.",
+        "admin_edit_save": "Save selection",
+        "admin_edit_done": "Participant schedule updated.",
         "finalize_section": "Finalize schedule",
         "finalize_slot": "Slot to finalize",
         "finalize_button": "Finalize",
         "finalized_label": "Finalized slot: {label}",
         "email_draft": "Email draft",
-        "need_final_for_export": "A finalized slot is required before exporting.",
+        "need_final_for_export": "Export is available only after an admin finalizes the schedule.",
         "syno_missing_fields": "Enter URL/account/password/calendar ID.",
         "simple_view": "Guest simple view",
         "usage_title": "How to use",
@@ -241,6 +253,26 @@ def slugify(text: str) -> str:
         return cleaned
     return f"poll-{datetime.utcnow().strftime('%Y%m%d%H%M%S')}"
 
+
+def hash_password(password: str) -> str:
+    salt = os.urandom(16)
+    iterations = 200_000
+    dk = hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), salt, iterations)
+    return f"pbkdf2${iterations}${base64.b64encode(salt).decode('ascii')}${base64.b64encode(dk).decode('ascii')}"
+
+
+def check_password(password: str, stored: str) -> tuple[bool, bool]:
+    if stored.startswith("pbkdf2$"):
+        try:
+            _, iter_s, salt_b64, dk_b64 = stored.split("$", 3)
+            iterations = int(iter_s)
+            salt = base64.b64decode(salt_b64)
+            dk_expected = base64.b64decode(dk_b64)
+        except Exception:
+            return False, False
+        dk = hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), salt, iterations)
+        return hmac.compare_digest(dk, dk_expected), False
+    return password == stored, True
 
 
 def get_admin_password() -> str:
@@ -724,14 +756,22 @@ with col_right:
                 )
                 if not existing.empty:
                     stored_pw = existing["voter_password"].dropna()
-                    if not stored_pw.empty and stored_pw.iloc[0] and stored_pw.iloc[0] != voter_pw:
-                        st.error(t("voter_pw_mismatch"))
-                        return
-                    # If previous record had no password, claim it by setting now
+                    if not stored_pw.empty and stored_pw.iloc[0]:
+                        ok, needs_upgrade = check_password(voter_pw, stored_pw.iloc[0])
+                        if not ok:
+                            st.error(t("voter_pw_mismatch"))
+                            return
+                        if needs_upgrade:
+                            conn.execute(
+                                "UPDATE votes SET voter_password = ? WHERE poll_id = ? AND voter_name = ?",
+                                (hash_password(voter_pw), selected_poll, voter_name),
+                            )
+                            conn.commit()
+                        # If previous record had no password, claim it by setting now
                     if stored_pw.empty or not stored_pw.iloc[0]:
                         conn.execute(
                             "UPDATE votes SET voter_password = ? WHERE poll_id = ? AND voter_name = ?",
-                            (voter_pw, selected_poll, voter_name),
+                            (hash_password(voter_pw), selected_poll, voter_name),
                         )
                         conn.commit()
                     chosen = existing[existing["available"] == 1]["option_id"].tolist()
@@ -805,6 +845,7 @@ with col_right:
                     st.error(t("voter_pw_need"))
                 else:
                     chosen = set(st.session_state.get(sel_key, []))
+                    pw_hash = hash_password(voter_pw)
                     for _, opt in options_df.iterrows():
                         available = int(opt["option_id"] in chosen)
                         conn.execute(
@@ -812,7 +853,7 @@ with col_right:
                             INSERT OR REPLACE INTO votes(poll_id, voter_name, option_id, available, comment, voter_password)
                             VALUES (?, ?, ?, ?, ?, ?)
                             """,
-                            (selected_poll, voter_name, opt["option_id"], available, comment, voter_pw),
+                            (selected_poll, voter_name, opt["option_id"], available, comment, pw_hash),
                         )
                     conn.commit()
                     st.success(t("vote_saved"))
@@ -875,6 +916,75 @@ with col_right:
         if is_admin:
             total_voters = votes_df["voter_name"].nunique() if not votes_df.empty else 0
             if not votes_df.empty:
+                st.markdown(f"**{t('admin_edit_title')}**")
+                voter_list = sorted(votes_df["voter_name"].unique())
+                selected_voter = st.selectbox(
+                    t("admin_edit_pick"),
+                    options=voter_list,
+                    key=f"admin_edit_voter_{selected_poll}",
+                )
+                st.caption(t("admin_edit_hint"))
+                if selected_voter:
+                    edit_sel_key = f"admin_edit_slots_{selected_poll}_{selected_voter}"
+                    existing_votes = votes_df[votes_df["voter_name"] == selected_voter]
+                    existing_selected = existing_votes[existing_votes["available"] == 1]["option_id"].tolist()
+                    st.session_state.setdefault(edit_sel_key, existing_selected)
+
+                    edit_grouped = {}
+                    for _, opt in options_df.iterrows():
+                        start_dt = datetime.fromisoformat(opt["start_ts"])
+                        key = start_dt.strftime("%Y-%m-%d (%a)")
+                        edit_grouped.setdefault(key, []).append(opt)
+
+                    for day, rows in edit_grouped.items():
+                        st.markdown(f"**{day}**")
+                        cols = st.columns(min(4, len(rows)))
+                        for idx, opt in enumerate(rows):
+                            col = cols[idx % len(cols)]
+                            with col:
+                                selected = opt["option_id"] in st.session_state[edit_sel_key]
+                                sdt = datetime.fromisoformat(opt["start_ts"])
+                                edt = datetime.fromisoformat(opt["end_ts"])
+                                label = f"{sdt.strftime('%H:%M')} - {edt.strftime('%H:%M')}"
+                                btn_type = "primary" if selected else "secondary"
+
+                                def toggle_edit_option(oid=opt["option_id"]):
+                                    current = set(st.session_state.get(edit_sel_key, []))
+                                    if oid in current:
+                                        current.remove(oid)
+                                    else:
+                                        current.add(oid)
+                                    st.session_state[edit_sel_key] = list(current)
+
+                                st.button(
+                                    label,
+                                    key=f"admin-edit-btn-{selected_voter}-{opt['option_id']}",
+                                    on_click=toggle_edit_option,
+                                    type=btn_type,
+                                    help=label,
+                                    use_container_width=True,
+                                )
+                    st.caption(t("selected_count", count=len(st.session_state[edit_sel_key])))
+                    if st.button(t("admin_edit_save"), type="primary"):
+                        chosen = set(st.session_state.get(edit_sel_key, []))
+                        stored_pw = existing_votes["voter_password"].dropna()
+                        stored_comment = existing_votes["comment"].dropna()
+                        voter_pw = stored_pw.iloc[0] if not stored_pw.empty else None
+                        comment = stored_comment.iloc[0] if not stored_comment.empty else ""
+                        for _, opt in options_df.iterrows():
+                            available = int(opt["option_id"] in chosen)
+                            conn.execute(
+                                """
+                                INSERT OR REPLACE INTO votes(
+                                    poll_id, voter_name, option_id, available, comment, voter_password
+                                ) VALUES (?, ?, ?, ?, ?, ?)
+                                """,
+                                (selected_poll, selected_voter, opt["option_id"], available, comment, voter_pw),
+                            )
+                        conn.commit()
+                        st.success(t("admin_edit_done"))
+                        st.rerun()
+
                 st.markdown(f"**{t('finalize_section')}**")
                 pw_check_final = None
                 if poll_pw_required:

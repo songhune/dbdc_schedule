@@ -99,26 +99,3 @@ def slot_label(start_ts: str, end_ts: str) -> str:
 def load_polls(conn: sqlite3.Connection) -> pd.DataFrame:
     return pd.read_sql("SELECT poll_id, title FROM polls ORDER BY created_at DESC", conn)
 
-
-def build_ics(start_dt: datetime, end_dt: datetime, title: str, description: str) -> str:
-    """Minimal ICS builder for calendar export."""
-
-    def fmt(dt: datetime) -> str:
-        return dt.strftime("%Y%m%dT%H%M%S")
-
-    uid = f"{int(datetime.utcnow().timestamp())}@dbdc-scheduler"
-    lines = [
-        "BEGIN:VCALENDAR",
-        "VERSION:2.0",
-        "PRODID:-//DBDC Scheduler//EN",
-        "BEGIN:VEVENT",
-        f"UID:{uid}",
-        f"DTSTAMP:{fmt(datetime.utcnow())}Z",
-        f"DTSTART:{fmt(start_dt)}Z",
-        f"DTEND:{fmt(end_dt)}Z",
-        f"SUMMARY:{title}",
-        f"DESCRIPTION:{description}",
-        "END:VEVENT",
-        "END:VCALENDAR",
-    ]
-    return "\n".join(lines)
