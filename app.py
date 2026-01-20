@@ -1,5 +1,6 @@
 import os
 import html
+import re
 from datetime import date, datetime, time, timedelta
 from pathlib import Path
 
@@ -28,8 +29,8 @@ TRANSLATIONS = {
         "login_error": "비밀번호가 올바르지 않습니다.",
         "login_success": "로그인 완료",
         "create_title": "새 일정 생성",
-        "poll_id": "일정 ID (짧은 코드)",
-        "poll_id_help": "예: team-lunch-jan",
+        "poll_name": "일정",
+        "poll_name_help": "예: DB/DC 세미나 일정",
         "poll_title": "제목",
         "poll_desc": "설명",
         "poll_desc_default": "가능한 시간대를 선택해주세요.",
@@ -39,7 +40,7 @@ TRANSLATIONS = {
         "end_time": "종료 시간",
         "slot_minutes": "슬롯 길이(분)",
         "create_submit": "일정 생성/덮어쓰기",
-        "poll_id_required": "일정 ID는 필수입니다.",
+        "poll_id_required": "일정명을 입력해주세요.",
         "date_required": "시작/종료 날짜를 모두 선택해주세요.",
         "time_invalid": "시작 시간은 종료 시간보다 빨라야 합니다.",
         "no_slots": "생성된 슬롯이 없습니다. 시간 범위와 길이를 확인하세요.",
@@ -77,12 +78,17 @@ TRANSLATIONS = {
         "poll_password_prompt": "일정 비밀번호를 입력하세요",
         "access_needed": "투표하려면 일정 비밀번호가 필요합니다.",
         "delete_poll": "선택 일정 삭제",
-        "delete_confirm": "삭제 확인용으로 일정 ID를 입력하세요",
+        "delete_confirm": "삭제할 일정을 선택하세요",
         "delete_done": "일정이 삭제되었습니다.",
         "delete_fail": "일정 삭제에 실패했습니다: {error}",
         "edit_load": "선택 일정 불러와서 수정",
         "choose_slots": "가능한 슬롯을 버튼으로 선택하세요",
         "selected_count": "선택된 슬롯: {count}개",
+        "admin_slots_title": "슬롯 편집",
+        "admin_slots_hint": "선택된 슬롯만 참여자가 볼 수 있습니다.",
+        "admin_slots_apply": "슬롯 적용",
+        "admin_slots_need": "최소 1개 슬롯을 선택하세요.",
+        "admin_slots_done": "슬롯이 업데이트되었습니다.",
         "load_my_vote": "내 선택 불러오기",
         "voter_pw": "참여자 비밀번호",
         "voter_pw_help": "내 응답을 수정/불러올 때 사용할 비밀번호",
@@ -124,8 +130,8 @@ TRANSLATIONS = {
         "login_error": "Incorrect password.",
         "login_success": "Logged in",
         "create_title": "Create poll",
-        "poll_id": "Poll ID (short code)",
-        "poll_id_help": "e.g., team-lunch-jan",
+        "poll_name": "Schedule",
+        "poll_name_help": "e.g., DB/DC Seminar Schedule",
         "poll_title": "Title",
         "poll_desc": "Description",
         "poll_desc_default": "Select all time slots that work for you.",
@@ -135,7 +141,7 @@ TRANSLATIONS = {
         "end_time": "End time",
         "slot_minutes": "Slot length (minutes)",
         "create_submit": "Create/overwrite poll",
-        "poll_id_required": "Poll ID is required.",
+        "poll_id_required": "Schedule name is required.",
         "date_required": "Select both start and end dates.",
         "time_invalid": "Start time must be before end time.",
         "no_slots": "No slots were generated. Check the time range and length.",
@@ -173,12 +179,17 @@ TRANSLATIONS = {
         "poll_password_prompt": "Enter poll password",
         "access_needed": "Poll password required to vote.",
         "delete_poll": "Delete selected poll",
-        "delete_confirm": "Type poll ID to confirm deletion",
+        "delete_confirm": "Select a poll to delete",
         "delete_done": "Poll deleted.",
         "delete_fail": "Failed to delete poll: {error}",
         "edit_load": "Load selected poll for edit",
         "choose_slots": "Pick your slots (button toggle)",
         "selected_count": "Selected slots: {count}",
+        "admin_slots_title": "Edit slots",
+        "admin_slots_hint": "Only selected slots will be available to participants.",
+        "admin_slots_apply": "Apply slots",
+        "admin_slots_need": "Select at least one slot.",
+        "admin_slots_done": "Slots updated.",
         "load_my_vote": "Load my choices",
         "voter_pw": "Participant password",
         "voter_pw_help": "Required to edit/load your responses",
@@ -222,6 +233,13 @@ def t(key: str, **kwargs) -> str:
         return template.format(**kwargs)
     except Exception:
         return template
+
+
+def slugify(text: str) -> str:
+    cleaned = re.sub(r"[^a-zA-Z0-9]+", "-", text.strip().lower()).strip("-")
+    if cleaned:
+        return cleaned
+    return f"poll-{datetime.utcnow().strftime('%Y%m%d%H%M%S')}"
 
 
 
@@ -427,7 +445,7 @@ with col_left if col_left else st.container():
         # initialize defaults once
         if "form_initialized" not in st.session_state:
             st.session_state["form_poll_id"] = ""
-            st.session_state["form_title"] = t("create_title")
+            st.session_state["form_name"] = ""
             st.session_state["form_desc"] = t("poll_desc_default")
             st.session_state["form_date_range"] = (date.today(), date.today() + timedelta(days=7))
             st.session_state["form_start_time"] = time(9, 0)
@@ -444,8 +462,7 @@ with col_left if col_left else st.container():
 
         st.subheader(t("create_title"))
         with st.form("create_poll"):
-            poll_id = st.text_input(t("poll_id"), key="form_poll_id", help=t("poll_id_help"))
-            title = st.text_input(t("poll_title"), key="form_title")
+            poll_name = st.text_input(t("poll_name"), key="form_name", help=t("poll_name_help"))
             description = st.text_area(t("poll_desc"), key="form_desc")
             date_range = st.date_input(
                 t("date_range"),
@@ -461,7 +478,9 @@ with col_left if col_left else st.container():
             submitted = st.form_submit_button(t("create_submit"))
 
         if submitted:
-            if not poll_id:
+            poll_id = st.session_state.get("form_poll_id") or slugify(poll_name)
+            title = poll_name.strip()
+            if not poll_name:
                 st.error(t("poll_id_required"))
             elif len(date_range) != 2:
                 st.error(t("date_required"))
@@ -501,7 +520,7 @@ with col_left if col_left else st.container():
                             (poll_id, start_ts.isoformat(), end_ts.isoformat()),
                         )
                     conn.commit()
-                    st.success(t("poll_ready", poll_id=poll_id))
+                    st.success(t("poll_ready", poll_id=title or poll_id))
                     open_polls = load_polls(conn)
 
 with col_right:
@@ -510,11 +529,11 @@ with col_right:
         st.info(t("no_polls"))
         st.stop()
 
-    poll_lookup = {row.poll_id: row.title for _, row in open_polls.iterrows()}
+    poll_lookup = {row.poll_id: (row.title or row.poll_id) for _, row in open_polls.iterrows()}
     selected_poll = st.selectbox(
         t("open_polls"),
         open_polls["poll_id"],
-        format_func=lambda pid: f"{pid} · {poll_lookup.get(pid, '')}",
+        format_func=lambda pid: poll_lookup.get(pid, pid),
     )
     simple_view = st.session_state.get("simple_view", True)
     if not is_admin:
@@ -568,7 +587,7 @@ with col_right:
             if st.button(t("edit_load"), type="secondary"):
                 st.session_state["prefill_data"] = {
                     "form_poll_id": poll_meta["poll_id"],
-                    "form_title": poll_meta["title"],
+                    "form_name": poll_meta["title"] or poll_meta["poll_id"],
                     "form_desc": poll_meta["description"],
                     "form_date_range": (
                         datetime.fromisoformat(poll_meta["start_date"]).date(),
@@ -582,11 +601,87 @@ with col_right:
                 st.rerun()
 
             st.markdown("###")
+            with st.expander(t("admin_slots_title")):
+                admin_sel_key = f"admin_slots_{selected_poll}"
+                existing_ids = options_df["option_id"].tolist()
+                if admin_sel_key not in st.session_state:
+                    st.session_state[admin_sel_key] = existing_ids
+                else:
+                    current = [oid for oid in st.session_state[admin_sel_key] if oid in existing_ids]
+                    st.session_state[admin_sel_key] = current or existing_ids
+
+                st.caption(t("admin_slots_hint"))
+                admin_grouped = {}
+                for _, opt in options_df.iterrows():
+                    start_dt = datetime.fromisoformat(opt["start_ts"])
+                    key = start_dt.strftime("%Y-%m-%d (%a)")
+                    admin_grouped.setdefault(key, []).append(opt)
+
+                for day, rows in admin_grouped.items():
+                    st.markdown(f"**{day}**")
+                    cols = st.columns(min(4, len(rows)))
+                    for idx, opt in enumerate(rows):
+                        col = cols[idx % len(cols)]
+                        with col:
+                            selected = opt["option_id"] in st.session_state[admin_sel_key]
+                            sdt = datetime.fromisoformat(opt["start_ts"])
+                            edt = datetime.fromisoformat(opt["end_ts"])
+                            label = f"{sdt.strftime('%H:%M')} - {edt.strftime('%H:%M')}"
+                            btn_type = "primary" if selected else "secondary"
+
+                            def toggle_admin_option(oid=opt["option_id"]):
+                                current = set(st.session_state.get(admin_sel_key, []))
+                                if oid in current:
+                                    current.remove(oid)
+                                else:
+                                    current.add(oid)
+                                st.session_state[admin_sel_key] = list(current)
+
+                            st.button(
+                                label,
+                                key=f"admin-btn-{opt['option_id']}",
+                                on_click=toggle_admin_option,
+                                type=btn_type,
+                                help=label,
+                                use_container_width=True,
+                            )
+                st.caption(t("selected_count", count=len(st.session_state[admin_sel_key])))
+                if st.button(t("admin_slots_apply"), type="primary"):
+                    chosen = set(st.session_state.get(admin_sel_key, []))
+                    if not chosen:
+                        st.error(t("admin_slots_need"))
+                    else:
+                        removed = set(existing_ids) - chosen
+                        if removed:
+                            placeholders = ",".join("?" for _ in removed)
+                            conn.execute(
+                                f"DELETE FROM votes WHERE poll_id = ? AND option_id IN ({placeholders})",
+                                (selected_poll, *removed),
+                            )
+                            conn.execute(
+                                f"DELETE FROM options WHERE poll_id = ? AND option_id IN ({placeholders})",
+                                (selected_poll, *removed),
+                            )
+                            if poll_meta.get("final_start_ts") and poll_meta.get("final_end_ts"):
+                                final_match = options_df[
+                                    (options_df["start_ts"] == poll_meta["final_start_ts"])
+                                    & (options_df["end_ts"] == poll_meta["final_end_ts"])
+                                ]
+                                if not final_match.empty and final_match.iloc[0]["option_id"] in removed:
+                                    conn.execute(
+                                        "UPDATE polls SET final_start_ts = NULL, final_end_ts = NULL WHERE poll_id = ?",
+                                        (selected_poll,),
+                                    )
+                        conn.commit()
+                        st.success(t("admin_slots_done"))
+                        st.rerun()
+
             with st.expander(t("delete_poll")):
                 delete_choice = st.radio(
                     t("delete_confirm"),
                     options=open_polls["poll_id"].tolist(),
                     index=list(open_polls["poll_id"]).index(selected_poll),
+                    format_func=lambda pid: poll_lookup.get(pid, pid),
                     key=f"delete_choice_{selected_poll}",
                 )
                 pw_check = None
@@ -645,11 +740,7 @@ with col_right:
                     if not first_comment.empty:
                         st.session_state[f"comment_{selected_poll}"] = first_comment.iloc[0]
 
-            ctrl_col1, ctrl_col2 = st.columns(2)
-            with ctrl_col1:
-                st.button(t("load_my_vote"), on_click=load_my_vote, use_container_width=True)
-            with ctrl_col2:
-                save_clicked = st.button(t("vote_submit"), type="primary", use_container_width=True)
+            st.button(t("load_my_vote"), on_click=load_my_vote, use_container_width=True)
 
             grouped_slots = {}
             for _, opt in options_df.iterrows():
@@ -677,7 +768,8 @@ with col_right:
                         sdt = datetime.fromisoformat(opt["start_ts"])
                         edt = datetime.fromisoformat(opt["end_ts"])
                         label = f"{sdt.strftime('%H:%M')} - {edt.strftime('%H:%M')}"
-                        btn_label = f"{'✅' if selected else '⬜️'} {label}"
+                        btn_label = label
+                        btn_type = "primary" if selected else "secondary"
 
                         def toggle_option(oid=opt["option_id"]):
                             current = set(st.session_state.get(sel_key, []))
@@ -687,8 +779,17 @@ with col_right:
                                 current.add(oid)
                             st.session_state[sel_key] = list(current)
 
-                        st.button(btn_label, key=f"btn-{opt['option_id']}", on_click=toggle_option, type="secondary", help=label, use_container_width=True)
+                        st.button(
+                            btn_label,
+                            key=f"btn-{opt['option_id']}",
+                            on_click=toggle_option,
+                            type=btn_type,
+                            help=label,
+                            use_container_width=True,
+                        )
             st.caption(t("selected_count", count=len(st.session_state[sel_key])))
+
+            save_clicked = st.button(t("vote_submit"), type="primary", use_container_width=True)
 
             if st.session_state[sel_key]:
                 first_opt = options_df[options_df["option_id"] == st.session_state[sel_key][0]].iloc[0]
