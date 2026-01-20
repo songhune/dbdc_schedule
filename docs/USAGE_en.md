@@ -15,4 +15,3 @@
 - Edit poll: load selected poll → adjust → create (overwrite).
 - Delete: type poll ID (and poll password if set) to confirm deletion.
 - Finalize: review votes, pick a slot to finalize. An email draft appears.
-- Synology: enter NAS URL/account/password/calendar ID to push the finalized slot via REST.

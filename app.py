@@ -5,7 +5,6 @@ import base64
 import hashlib
 import hmac
 from datetime import date, datetime, time, timedelta
-from pathlib import Path
 
 import pandas as pd
 import streamlit as st
@@ -16,7 +15,6 @@ from scheduler_core import (
     load_polls,
     slot_label,
 )
-from synology_client import push_synology_event, SynologyError
 
 st.set_page_config(page_title="DB/DC Seminar Scheduler", layout="wide")
 
@@ -61,11 +59,9 @@ TRANSLATIONS = {
         "popular_col_slot": "슬롯",
         "popular_col_yes": "찬성",
         "no_responses": "아직 응답이 없습니다. 투표를 입력하거나 직접 확정하세요.",
-        "export_title": "내보내기",
-        "export_path": "내보내기 경로",
-        "export_button": "CSV로 내보내기",
-        "export_need_path": "경로를 입력하세요.",
-        "export_success": "내보내기 완료: {path}",
+        "export_title": "CSV 내보내기",
+        "export_button": "CSV 다운로드",
+        "export_success": "다운로드 준비 완료",
         "export_fail": "내보내기에 실패했습니다: {error}",
         "timeline_title": "타임라인 미리보기",
         "timeline_slots_badge": "총 {count} 슬롯",
@@ -83,7 +79,7 @@ TRANSLATIONS = {
         "delete_confirm": "삭제할 일정을 선택하세요",
         "delete_done": "일정이 삭제되었습니다.",
         "delete_fail": "일정 삭제에 실패했습니다: {error}",
-        "edit_load": "선택 일정 불러와서 수정",
+        "edit_load": "선택 일정 불러오기/수정",
         "choose_slots": "가능한 슬롯을 버튼으로 선택하세요",
         "selected_count": "선택된 슬롯: {count}개",
         "admin_slots_title": "슬롯 편집",
@@ -167,11 +163,9 @@ TRANSLATIONS = {
         "popular_col_slot": "Slot",
         "popular_col_yes": "Yes",
         "no_responses": "No responses yet. Add votes or finalize directly.",
-        "export_title": "Synology NAS export (shared folder must be mounted by OS)",
-        "export_path": "Export path",
-        "export_button": "Export CSV",
-        "export_need_path": "Enter a path.",
-        "export_success": "Exported to: {path}",
+        "export_title": "CSV export",
+        "export_button": "Download CSV",
+        "export_success": "Download ready",
         "export_fail": "Export failed: {error}",
         "timeline_title": "Timeline preview",
         "timeline_slots_badge": "{count} slots",
@@ -1045,53 +1039,15 @@ with col_right:
                         )
                         st.text_area(t("email_draft"), value=f"Subject: {email_subject}\n\n{email_body}", height=140)
             with st.expander(t("export_title")):
-                default_path = st.session_state.get("nas_path", os.getenv("NAS_EXPORT_PATH", ""))
-                nas_path = st.text_input(t("export_path"), value=default_path, placeholder="/Volumes/nas/shared")
-                st.session_state["nas_path"] = nas_path
-                if st.button(t("export_button")):
-                    if not nas_path:
-                        st.error(t("export_need_path"))
-                    else:
-                        export_dir = Path(nas_path)
-                        try:
-                            export_dir.mkdir(parents=True, exist_ok=True)
-                            export_file = export_dir / f"{selected_poll}_results.csv"
-                            if votes_df.empty:
-                                pd.DataFrame().to_csv(export_file, index=False)
-                            else:
-                                # 원본 데이터와 요약을 함께 저장
-                                votes_df.to_csv(export_file, index=False)
-                                summary_file = export_dir / f"{selected_poll}_summary.csv"
-                                summary.to_csv(summary_file, index=False)
-                            st.success(t("export_success", path=export_dir))
-                        except Exception as exc:
-                            st.error(t("export_fail", error=exc))
+                export_df = votes_df if not votes_df.empty else pd.DataFrame()
+                csv_data = export_df.to_csv(index=False).encode("utf-8")
+                st.download_button(
+                    t("export_button"),
+                    data=csv_data,
+                    file_name=f"{selected_poll}_results.csv",
+                    mime="text/csv",
+                    use_container_width=True,
+                )
 
-            with st.expander("Synology Calendar"):
-                syno_url = st.text_input(t("syno_url"), key="syno_url", placeholder="https://your-nas:5001")
-                syno_user = st.text_input(t("syno_user"), key="syno_user")
-                syno_pass = st.text_input(t("syno_pass"), key="syno_pass", type="password")
-                syno_cal = st.text_input(t("syno_cal"), key="syno_cal", help="예: personal calendar UUID or name")
-                if st.button(t("syno_upload")):
-                    if not best_slot:
-                        st.error(t("syno_need_slot"))
-                    elif not all([syno_url, syno_user, syno_pass, syno_cal]):
-                        st.error(t("syno_missing_fields"))
-                    else:
-                        try:
-                            slot_for_sync = final_slot or best_slot
-                            push_synology_event(
-                                syno_url.rstrip("/"),
-                                syno_user,
-                                syno_pass,
-                                syno_cal,
-                                poll_meta["title"],
-                                poll_meta["description"],
-                                slot_for_sync[0],
-                                slot_for_sync[1],
-                            )
-                            st.success(t("syno_success"))
-                        except Exception as exc:
-                            st.error(t("syno_error", error=exc))
         else:
             pass  # guest calendar export removed
