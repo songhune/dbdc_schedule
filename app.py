@@ -245,7 +245,9 @@ def slugify(text: str) -> str:
     cleaned = re.sub(r"[^a-zA-Z0-9]+", "-", text.strip().lower()).strip("-")
     if cleaned:
         return cleaned
-    return f"poll-{datetime.utcnow().strftime('%Y%m%d%H%M%S')}"
+    # Fall back to a deterministic hash so non-ASCII names map to the same poll_id
+    digest = hashlib.sha1(text.strip().encode("utf-8")).hexdigest()[:10]
+    return f"poll-{digest}"
 
 
 def hash_password(password: str) -> str:
@@ -546,6 +548,8 @@ with col_left if col_left else st.container():
                             (poll_id, start_ts.isoformat(), end_ts.isoformat()),
                         )
                     conn.commit()
+                    # Remember the current poll id so repeated edits overwrite instead of creating duplicates
+                    st.session_state["form_poll_id"] = poll_id
                     st.success(t("poll_ready", poll_id=title or poll_id))
                     open_polls = load_polls(conn)
 
@@ -567,7 +571,11 @@ with col_right:
         simple_view = st.session_state.get("simple_view", True)
 
     if selected_poll:
-        poll_meta = pd.read_sql("SELECT * FROM polls WHERE poll_id = ?", conn, params=(selected_poll,)).iloc[0]
+        poll_meta_df = pd.read_sql("SELECT * FROM polls WHERE poll_id = ?", conn, params=(selected_poll,))
+        if poll_meta_df.empty:
+            st.error("선택한 일정 정보를 찾을 수 없습니다. 다시 선택하거나 새로고침하세요.")
+            st.stop()
+        poll_meta = poll_meta_df.iloc[0]
         st.caption(poll_meta["description"])
         poll_pw_required = poll_meta.get("poll_password")
 
